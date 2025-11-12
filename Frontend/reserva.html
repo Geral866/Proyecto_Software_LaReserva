@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <title>La Reserva - Reserva</title>
+  <style>
+    body { font-family: Arial; background: #f0f0f0; margin: 0; padding: 20px; }
+    .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #333; }
+    input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #0b7dda; }
+    #resultado { margin: 20px 0; padding: 10px; border-radius: 5px; text-align: center; }
+    .exito { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    #disponibilidad { margin: 10px 0; padding: 10px; background: #e3f2fd; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Reserva de Mesa (RQF-003)</h1>
+    <form id="reservaForm">
+      <input type="date" id="fecha" min="2025-11-13" required>
+      <input type="time" id="hora" required>
+      <button type="submit">Buscar y Reservar</button>
+    </form>
+    <div id="disponibilidad"></div>
+    <div id="resultado"></div>
+    <p><a href="/">Registro</a> | <a href="/admin">Admin</a></p>
+  </div>
+
+  <script>
+    document.getElementById('reservaForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fecha = document.getElementById('fecha').value;
+      const hora = document.getElementById('hora').value;
+      if (!fecha || !hora) return alert('Elige fecha y hora');
+      const dispRes = await fetch(`/disponibilidad/${fecha}/${hora}`);
+      const mesas = await dispRes.json();
+      if (mesas.length === 0) {
+        document.getElementById('disponibilidad').innerHTML = '<div class="error">No hay mesas disponibles.</div>';
+        return;
+      }
+      document.getElementById('disponibilidad').innerHTML = `<div>Mesas libres: ${mesas.map(m => m.id).join(', ')}</div>`;
+      const reservaRes = await fetch('/reserva', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fecha, hora, usuario_id: 1 })
+      });
+      document.getElementById('resultado').innerHTML = await reservaRes.text();
+    });
+  </script>
+</body>
+</html>
+
+

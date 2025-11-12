@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <title>La Reserva - Registro</title>
+  <style>
+    body { font-family: Arial; background: #f0f0f0; margin: 0; padding: 20px; }
+    .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #333; }
+    input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #45a049; }
+    #resultado { margin: 20px 0; padding: 10px; border-radius: 5px; text-align: center; }
+    .exito { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>La Reserva</h1>
+    <p>Registro de Cliente (RQF-001)</p>
+    <form id="registroForm">
+      <input type="text" id="nombre" placeholder="Nombre" required>
+      <input type="email" id="email" placeholder="Correo" required>
+      <input type="tel" id="telefono" placeholder="Teléfono" required>
+      <button type="submit">Registrarse</button>
+    </form>
+    <div id="resultado"></div>
+    <p><a href="/reserva">Ir a Reserva</a> | <a href="/admin">Admin</a></p>
+  </form>
+
+  <script>
+    document.getElementById('registroForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nombre = document.getElementById('nombre').value;
+      const email = document.getElementById('email').value;
+      const telefono = document.getElementById('telefono').value;
+      const res = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ nombre, email, telefono })
+      });
+      document.getElementById('resultado').innerHTML = await res.text();
+    });
+  </script>
+</body>
+</html>
+

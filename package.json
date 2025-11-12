@@ -1,0 +1,30 @@
+{
+  "name": "proyecto_software_lareserva",
+  "version": "1.0.0",
+  "description": "**LA RESERVA** es una aplicación web diseñada para mejorar la gestión de reservas en restaurantes. Su objetivo es ofrecer una plataforma intuitiva, escalable y eficiente que permita a los establecimientos organizar sus reservas en línea, optimizando recursos y mejorando la experiencia del cliente.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Geral866/Proyecto_Software_LaReserva.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Geral866/Proyecto_Software_LaReserva/issues"
+  },
+  "homepage": "https://github.com/Geral866/Proyecto_Software_LaReserva#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "ej": "^1.0.4",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "nodemailer": "^7.0.10",
+    "sqlite3": "^5.1.7"
+  }
+}

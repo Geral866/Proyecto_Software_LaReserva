@@ -1,0 +1,21 @@
+Tablas y Campos:
+
+Usuarios
+- id
+- nombre
+- email
+- telefono
+
+Mesas
+- id
+- capacidad
+- disponible
+
+Reservas
+- id
+- fecha
+- hora
+- usuario_id
+- mesa_id
+
+

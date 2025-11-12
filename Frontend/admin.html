@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <title>La Reserva - Admin</title>
+  <style>
+    body { font-family: Arial; background: #f0f0f0; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    h1, h2 { color: #333; }
+    input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background: #FF9800; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #F57C00; }
+    ul { list-style: none; padding: 0; }
+    li { background: #fff3cd; margin: 10px 0; padding: 10px; border-radius: 5px; border-left: 4px solid #ffc107; }
+    #resultado { margin: 20px 0; padding: 10px; border-radius: 5px; text-align: center; }
+    .exito { background: #d4edda; color: #155724; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Panel Admin (RQF-005/006)</h1>
+    
+    <h2>Lista de Reservas</h2>
+    <div id="listaReservas">Cargando...</div>
+
+    <h2>Configurar Mesa</h2>
+    <form id="configForm">
+      <input type="number" id="capacidad" placeholder="Capacidad (ej: 4)" min="1" required>
+      <input type="number" id="mesaId" placeholder="ID Mesa (ej: 1)" min="1">
+      <button type="submit">Guardar</button>
+    </form>
+    <div id="resultado"></div>
+
+    <p><a href="/">Registro</a> | <a href="/reserva">Reserva</a></p>
+  </div>
+
+  <script>
+    async function cargarReservas() {
+      const res = await fetch('/reservas');
+      document.getElementById('listaReservas').innerHTML = await res.text();
+    }
+    cargarReservas();
+
+    document.getElementById('configForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const capacidad = document.getElementById('capacidad').value;
+      const id = document.getElementById('mesaId').value;
+      const res = await fetch('/configurar-mesa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ capacidad, id: id ? parseInt(id) : null })
+      });
+      document.getElementById('resultado').innerHTML = await res.text();
+      cargarReservas();
+    });
+  </script>
+</body>
+</html>
+
