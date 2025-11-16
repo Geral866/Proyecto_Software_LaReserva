@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>La Reserva - Registro</title>
+  <title>La Reserva - Registro (RQF-001)</title>
   <style>
     body { font-family: Arial; background: #f0f0f0; margin: 0; padding: 20px; }
     .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
@@ -9,7 +9,7 @@
     input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
     button { width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
     button:hover { background: #45a049; }
-    #resultado { margin: 20px 0; padding: 10px; border-radius: 5px; text-align: center; }
+    #resultado { margin: 20px 0; padding: 10px; border-radius: 5px; text-align: center; display: none; }
     .exito { background: #d4edda; color: #155724; }
     .error { background: #f8d7da; color: #721c24; }
   </style>
@@ -20,13 +20,13 @@
     <p>Registro de Cliente (RQF-001)</p>
     <form id="registroForm">
       <input type="text" id="nombre" placeholder="Nombre" required>
-      <input type="email" id="email" placeholder="Correo" required>
+      <input type="email" id="email" placeholder="Correo Electrónico" required>
       <input type="tel" id="telefono" placeholder="Teléfono" required>
       <button type="submit">Registrarse</button>
     </form>
     <div id="resultado"></div>
-    <p><a href="/reserva">Ir a Reserva</a> | <a href="/admin">Admin</a></p>
-  </form>
+    <p><a href="reserva.html">Ir a Nueva Reserva</a> | <a href="lista.html">Ver Reservas</a></p>
+  </div>
 
   <script>
     document.getElementById('registroForm').addEventListener('submit', async (e) => {
@@ -34,14 +34,36 @@
       const nombre = document.getElementById('nombre').value;
       const email = document.getElementById('email').value;
       const telefono = document.getElementById('telefono').value;
-      const res = await fetch('/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ nombre, email, telefono })
-      });
-      document.getElementById('resultado').innerHTML = await res.text();
+
+      // FormData para POST urlencoded (compatible con backend)
+      const formData = new FormData();
+      formData.append('nombre', nombre);
+      formData.append('email', email);
+      formData.append('telefono', telefono);
+
+      try {
+        const response = await fetch('http://localhost:3000/register', {  // Apunta a tu backend
+          method: 'POST',
+          body: formData  // Envía como form, no JSON
+        });
+
+        const data = await response.json();
+        const resultadoDiv = document.getElementById('resultado');
+        resultadoDiv.innerHTML = data.mensaje || data.error;
+        resultadoDiv.className = response.ok ? 'exito' : 'error';
+        resultadoDiv.style.display = 'block';
+
+        if (response.ok) {
+          // Limpia form en éxito
+          document.getElementById('registroForm').reset();
+        }
+      } catch (error) {
+        console.error('Error conexión:', error);
+        document.getElementById('resultado').innerHTML = 'Error de conexión al servidor. Verifica si node server.js corre.';
+        document.getElementById('resultado').className = 'error';
+        document.getElementById('resultado').style.display = 'block';
+      }
     });
   </script>
 </body>
 </html>
-
